@@ -1,0 +1,32 @@
+{
+  "name": "vuex-electron-bridge-example",
+  "version": "1.0.0",
+  "description": "Example Electron app using vuex-electron-bridge",
+  "scripts": {
+    "serve": "vue-cli-service electron:serve",
+    "build": "vue-cli-service electron:build",
+    "postinstall": "electron-builder install-app-deps",
+    "postuninstall": "electron-builder install-app-deps"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/akett/vuex-electron-bridge-example.git"
+  },
+  "author": "Andy Crockett",
+  "license": "MIT",
+  "homepage": "https://github.com/akett/vuex-electron-bridge-example#readme",
+  "dependencies": {
+    "vue": "~3.2.37",
+    "vuex": "~4.0.2",
+    "vuex-electron-bridge": "git+https://github.com/akett/vuex-electron-bridge.git"
+  },
+  "devDependencies": {
+    "@vue/cli-service": "~4.5.19",
+    "core-js": "~3.23.4",
+    "electron": "^19.0.8",
+    "electron-builder": "~23.1.0",
+    "electron-devtools-installer": "~3.2.0",
+    "electron-store": "~8.0.2",
+    "vue-cli-plugin-electron-builder": "~2.1.1"
+  }
+}
