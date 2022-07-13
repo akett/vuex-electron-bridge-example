@@ -11,7 +11,9 @@
 
     <p>
       <input type="number" style="font-size: 1.5em; font-weight: 700; text-align: center"
-             @input="$store.dispatch(types.SET_COUNTER, Number($event.target.value) || $store.state.counter)"
+             @input="$store.dispatch(types.SET_COUNTER, isFinite($event.target.value)
+              ? Number($event.target.value)
+              : $store.state.counter)"
              :value="$store.state.counter" />
     </p>
 
