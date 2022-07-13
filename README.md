@@ -9,7 +9,7 @@ A simple Electron+Vue app demonstrating usage of [Vuex Electron Bridge](https://
 1. src / [electron.js](./src/electron.js)
 
 - At the top, note the usage of `createBridge()`
-- A little down, find `createWindow` to see the `webPreferences`
+- A little down, find `createWindow()` and see the `webPreferences`
 - At the bottom, note the usage of `unmount()`
 
 2. src / [preload.js](./src/preload.js)
@@ -20,7 +20,7 @@ A simple Electron+Vue app demonstrating usage of [Vuex Electron Bridge](https://
 
 - See the plugin added to store.
 - Note how Shared vs. Local mutations are handled, I used additional types to clearly designate actions that
-  call `localCommit`.
+  call `localCommit()`.
 
 ## How to run
 

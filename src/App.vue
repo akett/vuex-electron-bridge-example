@@ -1,21 +1,19 @@
 <template>
   <div>
-    <h2>
-      <kbd>vuex-electron-bridge-example</kbd>
-      <button @click="$electron.spawnRenderer()" style="float: right;">Spawn Renderer*</button>
-    </h2>
+    <button style="float: right;"
+            @click="$electron.spawnRenderer()">Spawn Renderer*</button>
+
+    <h2><kbd>vuex-electron-bridge-example</kbd></h2>
 
     <h3>A Simple Counter</h3>
 
     <p>Edit directly for shared mutations, or use the buttons below.</p>
 
-    <p>
-      <input type="number" style="font-size: 1.5em; font-weight: 700; text-align: center"
-             @input="$store.dispatch(types.SET_COUNTER, isFinite($event.target.value)
-              ? Number($event.target.value)
-              : $store.state.counter)"
-             :value="$store.state.counter" />
-    </p>
+    <input type="number" style="font-size: 1.5em; font-weight: 700; text-align: center;"
+           :value="$store.state.counter"
+           @input="$store.dispatch(types.SET_COUNTER, isFinite($event.target.value)
+            ? Number($event.target.value)
+            : $store.state.counter)" />
 
     <h4>Increment/Decrement using SHARED mutations:</h4>
 
@@ -39,16 +37,14 @@
       (these won't change the renderers)
     </p>
 
-    <p>
-      <button @click="$store.dispatch(types.SET_COUNTER, 0)">Reset all to 0</button>
-    </p>
+    <p><button @click="$store.dispatch(types.SET_COUNTER, 0)">Reset all to 0</button></p>
 
     <hr />
 
     <p>
       - Note that local mutations cause state to desync between processes.
       <br />
-      &nbsp; <strong>Be careful of this!</strong> Only use local mutations if you have good reason.
+      - <strong>Be careful of this!</strong> Only use local mutations for good reason.
       <br />
       * Renderers are hydrated with the state of the main process
     </p>
@@ -56,9 +52,7 @@
   </div>
 </template>
 
-<script>
-// note the '$electron' variable used above is defined in main.js
-
+<script> // the '$electron' variable used above is defined in index.js
 import { types } from "./store"
 
 export default {

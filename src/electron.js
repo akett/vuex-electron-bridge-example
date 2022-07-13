@@ -1,32 +1,42 @@
 'use strict'
 
 import { app, BrowserWindow, ipcMain, protocol } from 'electron'
-import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
+import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
 import { createProtocol } from "vue-cli-plugin-electron-builder/lib";
 import path from "path"
-
-// (1) ----- create vuex-electron-bridge with state persistence ----
 import store from "./store";
 import { createBridge } from "vuex-electron-bridge";
 
-// immediately create and mount the bridge by passing the store
-const vuexBridge = createBridge(store, { persist: true });
-// you can also delay mounting by passing no args here, and then Bridge.mount(store, options) later
-// see the usage of 'Bridge.unmount()' at the very bottom
+// (1) ----- setup vuex-electron-bridge with persistence ----
 
+const vuexBridge = createBridge(store, { persist: true });
+// - createBridge(), when called with your store, will immediately
+//   mount itself. Mounting registers the IPC listeners and (if using
+//   persistence) attempts to load the persisted state from storage.
+
+// - You can delay mounting by passing no arguments to createBridge(),
+//   then at some later point you would call Bridge.mount(store, options).
+//   In this example it would be vuexBridge.mount(store, { persist: true })
+
+// - If you aren't going to use 'Bridge.mount()' or 'Bridge.unmount()'
+//   you don't have to save createBridge() to a variable. Just call it directly:
+//   createBridge(store, { persist: true });
+
+// - Go to (3) to see the required webPreferences for renderers.
+// - Go to (7) to see usage of 'Bridge.unmount()' (at the bottom).
 
 // (2) ----- do some setup / define some helpers -----
-const isDeployed    = () => typeof process.env.WEBPACK_DEV_SERVER_URL === 'undefined';
-const isDevelopment = () => !isDeployed() || process.env.NODE_ENV === 'development';
 
-// protocol helpers - enables usage of app://
+const isDeployed      = () => typeof process.env.WEBPACK_DEV_SERVER_URL === 'undefined';
+const isDevelopment   = () => !isDeployed() || process.env.NODE_ENV === 'development';
+const installDevtools = () => isDevelopment() ? installExtension(VUEJS_DEVTOOLS) : Promise.resolve()
 const registerSchemes = (schemes) => !isDeployed() ? null : protocol.registerSchemesAsPrivileged(schemes);
 const installProtocol = () => !isDeployed() ? null : createProtocol('app');
-registerSchemes([{ scheme: 'app', privileges: { secure: true, standard: true } }]);
+registerSchemes([{ scheme: 'app', privileges: { secure: true, standard: true } }]); // enables app://
 
-// window helpers
-const installDevtools = async () => isDevelopment() ? await installExtension(VUEJS3_DEVTOOLS) : Promise.resolve()
-const createWindow    = (x = 20, y = 20) => new BrowserWindow({
+// (3) ----- create renderers with contextIsolation and preload -----
+
+const createWindow = (x = 20, y = 20) => new BrowserWindow({
   x, y,
   width: 600,
   height: 600,
@@ -42,42 +52,47 @@ const createWindow    = (x = 20, y = 20) => new BrowserWindow({
   },
 }).loadURL((isDeployed() ? 'app://./' : process.env.WEBPACK_DEV_SERVER_URL) + 'index.html');
 
+// (4) ----- set up some IPC listeners -----
 
-// (3) ----- set up custom IPC listeners -----
-// provides simple IPC alias for store.dispatch on the main process.
+// provide simple IPC alias for store.dispatch on the main process.
 ipcMain.handle('dispatch', (e, { type, payload }) => {
   console.log(type, payload || '') // show what's happening in console
   return store.dispatch(type, payload) // return dispatch (since it's a promise anyways)
               .then(() => console.log(store.state.counter)); // show new counter value
 });
 
-// spawns another window slightly to the right of the calling window
+// spawn another window slightly to the right of the calling window
 ipcMain.handle('spawnRenderer', async (e) => {
   const bounds = BrowserWindow.fromWebContents(e.sender).getNormalBounds();
   return await createWindow(bounds.x + 350, bounds.y)
 })
 
+// (5) ----- handle quit signals -----
 
-// (4) ----- handle quit signals -----
 process.on('SIGTERM', () => app.quit())
 process.on('SIGINT', () => app.quit())
 process.on('SIGQUIT', () => app.quit())
 process.on('message', (data) => data === 'graceful-exit' ? app.quit() : null)
 
+// (6) ----- handle app start -----
 
-// (5) ----- handle app start -----
 app.on('ready', async () => {
-  installProtocol();
+  installProtocol(); // enables app://
   await installDevtools();
   await createWindow(20, 20);
 });
 
+// (7) ----- handle app shutdown / unmount() the Bridge instance -----
 
-// (6) ----- handle app quit -----
 app.on('before-quit', () => {
-  // unmount our Bridge instance
   vuexBridge.unmount();
-  // since we are using persistence, we place this here in 'before-quit' to make one final attempt at persistence, this
-  // handles a case where the state may have recently changed and persistThrottle wouldn't save it before the app quits.
-  // of course, call unmount() anywhere you like, or not at all (e.g. if you aren't persisting).
+  // - unmount() unregisters the IPC listeners and (if using persistence)
+  //   makes an attempt to save the state one last time.
+
+  // - Since we are using persistence, we placed this here in 'before-quit'.
+  //   This is to handle a case where the state may have recently changed,
+  //   but the app quits before 'persistThrottle' would have fired a state save.
+
+  // - Of course, you don't have to use unmount(), (especially if not persisting)
+  //   and you can call it anywhere that makes sense in your application.
 })

@@ -11,7 +11,7 @@ module.exports = {
       ],
       builderOptions: {
         extraMetadata: {
-          // fixes a bug when building the app
+          // electron.js is built as background.js, indicate that
           "main": "background.js",
         },
       },

@@ -1,16 +1,13 @@
 import { createApp } from 'vue'
-import store from "./store"
-
 import App from './App.vue'
+import store from "./store"
 
 const app = createApp(App)
 
-// provide all components with $ access to our custom contextBridge (see preload.js)
+// provide all Vue components with '$electron' property
 app.config.globalProperties.$electron = window.electron || {}
+// (see definition in preload.js, see App.vue for usage)
 
-// set some config
-app.config.performance = false;
-app.config.devtools    = false;
-
-app.use(store)
-   .mount('#app')
+app
+  .use(store)
+  .mount('#app')

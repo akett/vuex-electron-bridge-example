@@ -8446,7 +8446,7 @@ vue@~3.2.37:
 
 "vuex-electron-bridge@git+https://github.com/akett/vuex-electron-bridge.git":
   version "1.0.0"
-  resolved "git+https://github.com/akett/vuex-electron-bridge.git#33f29be2591dbcb7729f80e3e42a4ab9601ceabd"
+  resolved "git+https://github.com/akett/vuex-electron-bridge.git#d78fef5fffe44c5ffd38af32a9c0e4d4e6272963"
   dependencies:
     deepmerge ">=2"
 
