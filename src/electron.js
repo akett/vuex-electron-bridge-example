@@ -10,9 +10,8 @@ import path from "path"
 import store from "./store";
 import { createBridge } from "vuex-electron-bridge";
 
-const vuexBridge = createBridge();
-// you can call Bridge.mount() whenever, e.g. immediately or in app.on('ready')
-vuexBridge.mount(store, { persist: true })
+const vuexBridge = createBridge(store, { persist: true });
+// you can optionally call Bridge.mount(), passing your store and options to it
 // see the usage of 'Bridge.unmount()' at the very bottom
 
 

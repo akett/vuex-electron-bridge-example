@@ -38,7 +38,7 @@
     </p>
 
     <p>
-      <button @click="$electron.dispatch(types.SET_COUNTER, 0)">Reset all to 0</button>
+      <button @click="$store.dispatch(types.SET_COUNTER, 0)">Reset all to 0</button>
     </p>
 
     <hr />
