@@ -8444,9 +8444,10 @@ vue@~3.2.37:
     "@vue/server-renderer" "3.2.37"
     "@vue/shared" "3.2.37"
 
-"vuex-electron-bridge@git+https://github.com/akett/vuex-electron-bridge.git":
-  version "1.0.0"
-  resolved "git+https://github.com/akett/vuex-electron-bridge.git#d78fef5fffe44c5ffd38af32a9c0e4d4e6272963"
+vuex-electron-bridge@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/vuex-electron-bridge/-/vuex-electron-bridge-1.0.1.tgz#b708834c32056effd0b5dcc2fd13aee71f0c61c2"
+  integrity sha512-IguGv2bd7yfa0UDdGg3AtImfZ3UFK2yBllWdZ9XabQbJV38P4sW4zKDBo0cOAOTrRdpHexogy8XGpzkTYgV9iw==
   dependencies:
     deepmerge ">=2"
 

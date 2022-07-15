@@ -18,7 +18,7 @@
   "dependencies": {
     "vue": "~3.2.37",
     "vuex": "~4.0.2",
-    "vuex-electron-bridge": "git+https://github.com/akett/vuex-electron-bridge.git"
+    "vuex-electron-bridge": "^1.0.1"
   },
   "devDependencies": {
     "@vue/cli-service": "~4.5.19",
